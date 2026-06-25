@@ -122,7 +122,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     const arabicText = `{\\fad(250,250)\\pos(${width / 2},${arabicY})}${ayah.text}`;
     const translationText = `{\\fad(250,250)\\pos(${width / 2},${translationY})}${ayah.translation}`;
 
-    fileContent += `Dialogue: 0,${start},${end},Arabic,,0,0,0,,${arabicText}\n`;
+    if (payload.subtitleShowArabic ?? true) {
+      fileContent += `Dialogue: 0,${start},${end},Arabic,,0,0,0,,${arabicText}\n`;
+    }
     if (payload.subtitleShowTranslation) {
       fileContent += `Dialogue: 0,${start},${end},Translation,,0,0,0,,${translationText}\n`;
     }

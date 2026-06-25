@@ -18,6 +18,7 @@ export const PayloadSchema = z.object({
   subtitleOutlineWidth:     z.number().optional().default(2),
   subtitleShadowColor:      z.string().optional().default('#000000'),
   subtitleShadowWidth:      z.number().optional().default(0),
+  subtitleShowArabic:       z.boolean().optional().default(true),
   subtitleShowTranslation:  z.boolean().optional().default(true),
   subtitleFontSize:         z.number().optional().default(44),
 

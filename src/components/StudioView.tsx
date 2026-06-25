@@ -69,6 +69,7 @@ export default function StudioView({
   const { state: generationState, submit: submitGeneration, reset: resetGeneration } = useGeneration();
   const [aspectRatio, setAspectRatio] = useState<'vertical' | 'horizontal'>('vertical');
   const [fontSize, setFontSize] = useState<number>(64);
+  const [showArabic, setShowArabic] = useState<boolean>(true);
   const [showTranslation, setShowTranslation] = useState<boolean>(true);
   const [veilOpacity, setVeilOpacity] = useState<number>(40);
   const [bgQuery, setBgQuery] = useState<string>('starry sky');
@@ -352,6 +353,7 @@ export default function StudioView({
         subtitleOutlineWidth,
         subtitleShadowColor,
         subtitleShadowWidth,
+        subtitleShowArabic: showArabic,
         subtitleShowTranslation: showTranslation,
         audioEchoEnabled,
         audioEchoDelay,
@@ -379,6 +381,7 @@ export default function StudioView({
       reciterId: selectedReciterId, 
       aspectRatio, 
       fontSize, 
+      showArabic,
       showTranslation, 
       veilOpacity, 
       bgQuery,
@@ -758,6 +761,17 @@ export default function StudioView({
                     onChange={(e) => setSubtitleShadowWidth(Number(e.target.value))} 
                     className="w-full h-1 bg-[#2b2b35] rounded-lg appearance-none cursor-pointer accent-emerald-500" 
                   />
+                </div>
+              </div>
+
+              {/* Arabic Toggle */}
+              <div className="flex items-center justify-between bg-[#18181d] p-3 border border-[#202025]">
+                <label className="text-[10px] font-mono uppercase tracking-wider text-gray-300 font-bold">Show Arabic scripture</label>
+                <div 
+                  className={`w-10 h-6 border border-[#2d2d35] relative cursor-pointer transition-all ${showArabic ? 'bg-emerald-500/20 border-emerald-500' : 'bg-[#151518]'}`} 
+                  onClick={() => setShowArabic(!showArabic)}
+                >
+                  <div className={`absolute top-0.5 w-4 h-4 bg-emerald-500 transition-all ${showArabic ? 'left-5' : 'left-0.5'}`} />
                 </div>
               </div>
 
@@ -1251,12 +1265,12 @@ export default function StudioView({
                 <>
                   {isPreamblePlaying() ? (
                     <div className="animate-fade-in flex flex-col gap-4">
-                      <p className="font-serif leading-[1.6] select-none drop-shadow-xl font-normal" dir="rtl" style={getBismillahSubtitleStyle()}>بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</p>
+                      {showArabic && <p className="font-serif leading-[1.6] select-none drop-shadow-xl font-normal" dir="rtl" style={getBismillahSubtitleStyle()}>بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</p>}
                       {showTranslation && <p className="font-sans font-medium leading-relaxed select-none drop-shadow-lg italic" style={getTranslationSubtitleStyle()}>In the name of Allah, the Beneficent, the Merciful</p>}
                     </div>
                   ) : (
                     <div className="flex flex-col gap-4">
-                      <p className="font-serif leading-[1.6] select-none transition-all duration-300" dir="rtl" style={getArabicSubtitleStyle()}>{versesContent[currVerseIdx]?.text}</p>
+                      {showArabic && <p className="font-serif leading-[1.6] select-none transition-all duration-300" dir="rtl" style={getArabicSubtitleStyle()}>{versesContent[currVerseIdx]?.text}</p>}
                       {showTranslation && <p className="font-sans font-medium leading-relaxed max-w-[90%] select-none transition-all duration-300 italic mx-auto" style={getTranslationSubtitleStyle()}>{versesContent[currVerseIdx]?.translation}</p>}
                     </div>
                   )}
