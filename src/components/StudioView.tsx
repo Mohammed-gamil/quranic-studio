@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   ArrowLeft, Play, Pause, Save, Video, CheckSquare, Settings, Sliders, 
   Trash, Download, Search, AlertCircle, RefreshCw, Layers, Copy,
-  Type, Volume2, Activity, Sparkles, SlidersHorizontal, Plus
+  Type, Volume2, Activity, Sparkles, SlidersHorizontal, Plus, UploadCloud, X
 } from 'lucide-react';
 import { SurahItem, Reciter, GenerationHistoryRow } from '../types';
 import { useGeneration } from '../hooks/useGeneration';
@@ -75,6 +75,8 @@ export default function StudioView({
   const [activeBgIdx, setActiveBgIdx] = useState<number>(0);
   const [customBgUrl, setCustomBgUrl] = useState<string>('');
   const [copiedConfig, setCopiedConfig] = useState<boolean>(false);
+  const [uploadingBg, setUploadingBg] = useState<boolean>(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   // Custom styling states
   const [subtitleFont, setSubtitleFont] = useState<string>('Tajawal');
@@ -426,6 +428,37 @@ export default function StudioView({
         const data = await res.json();
         if (data.success && data.videoUrl) { setCustomBgUrl(data.videoUrl); setActiveBgIdx(-1); }
       } catch (err) { console.error(err); }
+    }
+  };
+
+  const handleBgUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingBg(true);
+    setUploadError(null);
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (data.success && data.fileUrl) {
+        setCustomBgUrl(data.fileUrl);
+        setBgQuery(data.fileUrl);
+        setActiveBgIdx(-1);
+      } else {
+        setUploadError(data.error || 'Upload failed');
+      }
+    } catch (err) {
+      console.error(err);
+      setUploadError('Network error uploading file');
+    } finally {
+      setUploadingBg(false);
     }
   };
 
@@ -903,6 +936,66 @@ export default function StudioView({
                       <img src={preset.thumb} alt={preset.id} className="w-full h-full object-cover" />
                     </button>
                   ))}
+                </div>
+
+                {/* Custom Uploaded Background Indicator */}
+                {customBgUrl && (
+                  <div className="flex items-center justify-between bg-[#131316] border border-emerald-500/50 p-2 text-xs font-mono">
+                    <div className="flex items-center gap-2 overflow-hidden">
+                      <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shrink-0"></div>
+                      <span className="text-gray-300 truncate text-[10px]">
+                        CUSTOM: {customBgUrl.split('/').pop()}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCustomBgUrl('');
+                        if (activeBgIdx >= 0) {
+                          setBgQuery(BACKGROUND_PRESETS[activeBgIdx].query);
+                        } else {
+                          setActiveBgIdx(0);
+                          setBgQuery(BACKGROUND_PRESETS[0].query);
+                        }
+                      }}
+                      className="text-gray-400 hover:text-red-400 cursor-pointer p-0.5"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                )}
+
+                {/* Upload Button */}
+                <div className="pt-2 border-t border-[#202025]/50">
+                  <label className="flex flex-col items-center justify-center border-2 border-dashed border-[#2d2d35] hover:border-emerald-500/50 bg-[#131316] py-3 px-4 cursor-pointer hover:bg-[#1b1b22] transition-all text-center">
+                    <input 
+                      type="file" 
+                      accept="image/*,video/*" 
+                      className="hidden" 
+                      onChange={handleBgUpload} 
+                      disabled={uploadingBg}
+                    />
+                    {uploadingBg ? (
+                      <div className="flex items-center gap-2 text-emerald-400 font-mono text-[9px]">
+                        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                        <span>UPLOADING_BACKGROUND...</span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center gap-1">
+                        <div className="flex items-center gap-1.5 text-gray-400 font-mono text-[9px] font-bold">
+                          <UploadCloud className="w-4 h-4 text-emerald-400" />
+                          <span>UPLOAD CUSTOM BACKGROUND</span>
+                        </div>
+                        <span className="text-[7.5px] text-gray-500 font-mono uppercase tracking-wider">MP4, MOV, JPG, PNG, WEBP (Max 100MB)</span>
+                      </div>
+                    )}
+                  </label>
+                  {uploadError && (
+                    <p className="text-[9px] font-mono text-red-400 mt-1.5 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
+                      {uploadError}
+                    </p>
+                  )}
                 </div>
               </div>
 

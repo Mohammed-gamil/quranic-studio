@@ -7,7 +7,7 @@ export const PayloadSchema = z.object({
   ayahFrom:                 z.number().int().min(1),
   ayahTo:                   z.number().int().min(1),
   reciterId:                z.number().int().min(1).max(10).default(7),
-  backgroundQuery:          z.string().min(2).max(80).trim(),
+  backgroundQuery:          z.string().min(2).max(300).trim(),
   videoFormat:              z.enum(['vertical', 'horizontal']),
   
   // Custom Subtitle Styles
