@@ -1,0 +1,54 @@
+/* FILE: src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Tajawal:wght@400;500;700;800&family=Lalezar&family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* Divine Narrative Studio: Sacred Minimalist Palette */
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Amiri", "Playfair Display", ui-serif, Georgia, serif;
+  --font-mono: "Courier Prime", ui-monospace, SFMono-Regular, monospace;
+
+  /* OKLCH Color Strategy: Warm Parchment & Sacred Crimson */
+  --color-primary: oklch(15% 0.01 60); /* Deep Ink */
+  --color-on-primary: oklch(94% 0.01 60); /* Parchment Paper */
+  --color-secondary: oklch(35% 0.15 25); /* Sacred Crimson */
+  --color-secondary-hover: oklch(40% 0.18 25);
+  
+  --color-surface: oklch(94% 0.01 60);
+  --color-surface-dim: oklch(90% 0.015 60);
+  --color-surface-container: oklch(98% 0.005 60);
+  
+  --color-outline: oklch(15% 0.01 60);
+  --color-outline-muted: oklch(15% 0.01 60 / 15%);
+  
+  --color-error: oklch(45% 0.2 25);
+  --color-error-container: oklch(92% 0.05 25);
+
+  /* Refined Transitions */
+  --animate-fade-in: fade-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-slide-up: slide-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-progress-simulate: progress-simulate 30s cubic-bezier(0.1, 0.8, 0.1, 1) forwards;
+}
+
+/* Global scrollbar visual styles: Ink on Parchment */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-surface-dim);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border-radius: 0px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-secondary);
+}
+
+body {
+  background-color: var(--color-surface);
+  color: var(--color-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

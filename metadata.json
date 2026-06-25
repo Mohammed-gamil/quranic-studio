@@ -1,0 +1,6 @@
+{
+  "name": "Quranic Studio",
+  "description": "Elegant Quranic video generation studio with recitations, subtitles, and dynamic background visualization.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

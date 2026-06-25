@@ -1,0 +1,22 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+
+# SQLite databases (generated at runtime)
+data/*.db
+data/*.db-shm
+data/*.db-wal
+
+# Output directory (render cache and temp files)
+output/
+
+# Dynamic media caches, uploads, and generated exports
+data/media/audio/
+data/media/backgrounds/
+data/media/uploads/
+data/media/library/exports/
