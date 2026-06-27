@@ -93,6 +93,20 @@ This project is built for **everyone**. It is a gift to the global Muslim Ummah 
 
 ### Run the Studio
 
+You can use the automated cross-platform startup scripts to easily check/install dependencies and start the application in one step:
+
+* **Linux / macOS**:
+  ```bash
+  ./run.sh
+  ```
+* **Windows**:
+  Double-click `run.bat` or run:
+  ```cmd
+  run.bat
+  ```
+
+Alternatively, you can run the commands manually:
+
 * **Development Mode** (Vite Dev Server + Express Hot Reload):
   ```bash
   npm run dev
