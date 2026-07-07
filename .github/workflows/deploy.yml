@@ -1,0 +1,33 @@
+name: Deploy Quranic Studio to DigitalOcean
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Server via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd /app
+            echo "📥 سحب الكود الجديد..."
+            git pull origin main
+
+            echo "🐳 إعادة بناء وتشغيل الـ Containers..."
+            docker compose up -d --build
+
+            echo "🧹 تنظيف الـ Images القديمة لتوفير المساحة..."
+            docker image prune -f
+
+            echo "✅ تم التحديث بنجاح!"
