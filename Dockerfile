@@ -38,9 +38,8 @@ RUN npm ci --omit=dev
 # Copy compiled artifacts from builder
 COPY --from=builder /app/dist ./dist
 
-# Copy runtime assets
+# Copy runtime assets (fonts only — media dirs are created at runtime via volumes)
 COPY data/fonts ./data/fonts
-COPY data/media/library ./data/media/library
 
 # Ensure runtime directories exist (volumes will overlay these)
 RUN mkdir -p \
