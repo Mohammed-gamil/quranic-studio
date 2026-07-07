@@ -211,13 +211,14 @@ export async function runFfmpeg(
       ? `aecho=0.8:0.88:${payload.audioEchoDelay ?? 60}:${payload.audioEchoDecay ?? 0.4}` 
       : 'anull';
 
-    if (ambientLocalPath) {
-      filter += `[1:a]${echoFilter}[rec_filtered];[2:a]volume=${payload.audioAmbientVolume ?? 0.15}[amb_scaled];[rec_filtered][amb_scaled]amix=inputs=2:duration=first:dropout_transition=0,asplit=2[awav][outa];`;
-    } else {
-      filter += `[1:a]${echoFilter},asplit=2[awav][outa];`;
-    }
-
     if (payload.waveformEnabled) {
+      // Split audio: [awav] feeds the waveform visualizer, [outa] goes to the output
+      if (ambientLocalPath) {
+        filter += `[1:a]${echoFilter}[rec_filtered];[2:a]volume=${payload.audioAmbientVolume ?? 0.15}[amb_scaled];[rec_filtered][amb_scaled]amix=inputs=2:duration=first:dropout_transition=0,asplit=2[awav][outa];`;
+      } else {
+        filter += `[1:a]${echoFilter},asplit=2[awav][outa];`;
+      }
+
       const mode = payload.waveformMode ?? 'line';
       const color = payload.waveformColor ?? '#FFFFFF';
       const opacity = payload.waveformOpacity ?? 0.5;
@@ -225,6 +226,13 @@ export async function runFfmpeg(
 
       filter += `[awav]showwaves=s=${waveSize}:mode=${mode}:colors=${waveColor}@${opacity}:r=25:draw=full[wave];[bg][wave]overlay=0:H-h:shortest=1[v1];[v1]subtitles='${escapedAssPath}':fontsdir='${escapedFontsDir}'[outv]`;
     } else {
+      // No waveform — route audio directly to [outa] without splitting
+      if (ambientLocalPath) {
+        filter += `[1:a]${echoFilter}[rec_filtered];[2:a]volume=${payload.audioAmbientVolume ?? 0.15}[amb_scaled];[rec_filtered][amb_scaled]amix=inputs=2:duration=first:dropout_transition=0[outa];`;
+      } else {
+        filter += `[1:a]${echoFilter}[outa];`;
+      }
+
       filter += `[bg]subtitles='${escapedAssPath}':fontsdir='${escapedFontsDir}'[outv]`;
     }
 
