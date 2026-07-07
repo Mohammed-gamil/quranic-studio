@@ -560,7 +560,7 @@ export default function StudioView({
   };
 
   return (
-    <div className="w-full h-full md:h-[calc(100vh-64px)] overflow-hidden flex flex-col md:flex-row bg-[#0b0b0d] text-gray-200">
+    <div className="w-full min-h-[calc(100vh-56px)] md:h-[calc(100vh-64px)] overflow-hidden flex flex-col md:flex-row bg-[#0b0b0d] text-gray-200">
       <audio 
         ref={audioRef} 
         src={audioUrl || undefined} 
@@ -575,8 +575,8 @@ export default function StudioView({
         }} 
       />
       
-      {/* LEFT ACCORDION SETTINGS SIDEBAR */}
-      <aside className="w-full md:w-[380px] bg-[#121215] flex flex-col h-full shrink-0 select-none overflow-y-auto border-r border-[#202025] custom-scrollbar">
+      {/* SETTINGS SIDEBAR — full width on mobile (shows below viewport), fixed width on desktop */}
+      <aside className="w-full md:w-[380px] bg-[#121215] flex flex-col md:h-full shrink-0 select-none overflow-y-auto border-b md:border-b-0 md:border-r border-[#202025] custom-scrollbar order-2 md:order-1 max-h-[55vh] md:max-h-none">
         {/* Sidebar Header Tabs */}
         <div className="p-4 border-b border-[#202025] bg-[#18181d] flex flex-col gap-2">
           <div className="flex items-center justify-between">
@@ -1203,8 +1203,8 @@ export default function StudioView({
         </div>
       </aside>
       
-      {/* MAIN RENDER ENGINE VIEWPORT & TIMELINE */}
-      <main className="flex-1 flex flex-col bg-[#0b0b0d] relative h-full">
+      {/* MAIN RENDER ENGINE VIEWPORT & TIMELINE — comes first on mobile */}
+      <main className="flex-1 flex flex-col bg-[#0b0b0d] relative order-1 md:order-2 min-h-0">
         {/* Viewport Header */}
         <header className="flex justify-between items-center px-6 py-4 border-b border-[#202025] bg-[#121215]">
           <div className="flex items-center gap-4 text-right" dir="rtl">
@@ -1222,16 +1222,16 @@ export default function StudioView({
         </header>
 
         {/* Viewport Render Stage */}
-        <div className="flex-grow flex flex-col items-center justify-center p-6 relative overflow-hidden bg-[#0e0e11] select-none">
-          <IslamicCornerOrnament position="top-left" className="w-44 h-44 -left-4 -top-4 opacity-[0.02] text-emerald-500 pointer-events-none" />
-          <IslamicCornerOrnament position="top-right" className="w-44 h-44 -right-4 -top-4 opacity-[0.02] text-emerald-500 pointer-events-none" />
-          <IslamicCornerOrnament position="bottom-left" className="w-44 h-44 -left-4 -bottom-4 opacity-[0.02] text-emerald-500 pointer-events-none" />
-          <IslamicCornerOrnament position="bottom-right" className="w-44 h-44 -right-4 -bottom-4 opacity-[0.02] text-emerald-500 pointer-events-none" />
+        <div className="flex-grow flex flex-col items-center justify-center p-3 md:p-6 relative overflow-hidden bg-[#0e0e11] select-none">
+          <IslamicCornerOrnament position="top-left" className="w-44 h-44 -left-4 -top-4 opacity-[0.02] text-emerald-500 pointer-events-none hidden md:block" />
+          <IslamicCornerOrnament position="top-right" className="w-44 h-44 -right-4 -top-4 opacity-[0.02] text-emerald-500 pointer-events-none hidden md:block" />
+          <IslamicCornerOrnament position="bottom-left" className="w-44 h-44 -left-4 -bottom-4 opacity-[0.02] text-emerald-500 pointer-events-none hidden md:block" />
+          <IslamicCornerOrnament position="bottom-right" className="w-44 h-44 -right-4 -bottom-4 opacity-[0.02] text-emerald-500 pointer-events-none hidden md:block" />
           
           {/* Dynamic Video Viewport Container */}
           <div 
             style={{ containerType: 'size' }}
-            className={`relative bg-black overflow-hidden transition-all duration-300 border border-[#2c2c35] shadow-2xl flex items-center justify-center ${aspectRatio === 'vertical' ? 'w-[280px] h-[498px] sm:w-[320px] sm:h-[569px]' : 'w-[100%] max-w-[680px] aspect-video'}`}
+            className={`relative bg-black overflow-hidden transition-all duration-300 border border-[#2c2c35] shadow-2xl flex items-center justify-center ${aspectRatio === 'vertical' ? 'w-[200px] h-[356px] sm:w-[260px] sm:h-[462px] md:w-[280px] md:h-[498px] lg:w-[320px] lg:h-[569px]' : 'w-full max-w-[420px] md:max-w-[680px] aspect-video'}`}
           >
             {/* Visual background video or image with CSS filter classes applied in real-time */}
             {(() => {
@@ -1311,16 +1311,16 @@ export default function StudioView({
         </div>
 
         {/* BOTTOM HORIZONTAL TIMELINE TRACK */}
-        <div className="h-32 bg-[#121215] border-t border-[#202025] flex flex-col p-3 w-full select-none">
+        <div className="h-24 md:h-32 bg-[#121215] border-t border-[#202025] flex flex-col p-2 md:p-3 w-full select-none shrink-0">
           <div className="flex justify-between items-center text-[9px] font-mono text-gray-400 mb-1 px-1">
-            <span className="uppercase tracking-widest text-emerald-400 font-bold flex items-center gap-1"><SlidersHorizontal className="w-3.5 h-3.5" /> Studio Timeline tracks</span>
-            <span className="text-gray-500">Seek Offset: {formatMsToMmSs(audioOffsetMs)} • Reciter: {reciters.find(r => r.id === selectedReciterId)?.name_en || 'Selected'}</span>
+            <span className="uppercase tracking-widest text-emerald-400 font-bold flex items-center gap-1"><SlidersHorizontal className="w-3 h-3 md:w-3.5 md:h-3.5" /> <span className="hidden sm:inline">Studio Timeline tracks</span><span className="sm:hidden">Timeline</span></span>
+            <span className="text-gray-500 truncate max-w-[140px] md:max-w-none">Offset: {formatMsToMmSs(audioOffsetMs)} • {reciters.find(r => r.id === selectedReciterId)?.name_en || 'Reciter'}</span>
           </div>
           
           {/* Timeline Scrollable Track Area */}
           <div 
             onClick={handleTimelineClick} 
-            className="flex-1 bg-[#0b0b0d] border border-[#202025] relative cursor-pointer flex items-center overflow-hidden h-14"
+            className="flex-1 bg-[#0b0b0d] border border-[#202025] relative cursor-pointer flex items-center overflow-x-auto h-12 md:h-14"
           >
             {/* Playhead Progress Overlay */}
             <div 
