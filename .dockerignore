@@ -1,0 +1,44 @@
+# Git
+.git
+.gitignore
+
+# Dev dependencies & caches
+node_modules
+
+# Dev output that should be built fresh inside the container
+dist
+
+# Local secrets
+.env
+.env.*
+!.env.example
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor configs
+.vscode
+.idea
+*.swp
+
+# Build artifacts / logs
+*.log
+coverage
+
+# Runtime-generated data (mounted as volumes)
+output/
+data/media/audio/
+data/media/backgrounds/
+data/media/uploads/
+data/media/ambient/
+data/*.db
+data/*.db-shm
+data/*.db-wal
+
+# Docs (not needed in image)
+*.md
+
+# Test files
+*.test.ts
+*.spec.ts
