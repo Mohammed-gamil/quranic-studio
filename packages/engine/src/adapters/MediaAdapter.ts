@@ -47,7 +47,13 @@ export class MediaAdapter {
     
     // 1. Check if the query is a direct local path (e.g. from an upload or library selection)
     if (query.startsWith('/') || query.includes('\\') || query.includes('data/media')) {
-      const absolutePath = path.isAbsolute(query) ? query : path.resolve(process.cwd(), query.startsWith('/') ? query.slice(1) : query);
+      let absolutePath = '';
+      if (path.isAbsolute(query) && fs.existsSync(query)) {
+        absolutePath = query;
+      } else {
+        const cleanQuery = query.startsWith('/') ? query.slice(1) : query;
+        absolutePath = path.resolve(process.cwd(), cleanQuery);
+      }
       
       if (fs.existsSync(absolutePath)) {
         logger.info({ absolutePath }, 'Using direct local media path');
